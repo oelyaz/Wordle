@@ -1,4 +1,12 @@
 # Wordle
+## Spielen
+Um diese Version von Wordle zu spielen einfach das w6rdle.zip archive runterladen und entpacken.
+Anschließend:
+```
+cd w6rdle/dist/
+./W6rdle
+```
+
 
 ## Wortlisten
 - Wörterbuch von Jan Schreiber unter https://sourceforge.net/projects/germandict/
