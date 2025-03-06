@@ -1,6 +1,6 @@
 import tkinter as tk
 
-from src.word_list import WordList
+from word_list import WordList
 
 
 class View:
