@@ -21,10 +21,10 @@ with open(source_path, 'r', encoding='utf-8') as s:
         word = line.split('\t')[1]
         filtered.append(word) if word in dictionary and word not in first_names else word
 
-with open('../wordlist.txt', 'w') as l:
+with open('../target_wordlist.txt', 'w') as l:
     l.write('\n'.join(filtered))
 
 with open('../woerterbuch/cpos/cpos_wortliste.txt', 'r') as c:
-    with open('../target_words.txt', 'w') as t:
+    with open('../wordlist.txt', 'w') as t:
         for line in c:
             t.write(line) if line[:6] in dictionary and len(line) == 8 else line

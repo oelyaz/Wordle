@@ -1,9 +1,9 @@
-from view import View
+from src.view import View
 
 
 def main():
     view = View()
-    view.root.mainloop()
+    view.game_loop()
 
 if __name__ == '__main__':
     main()
