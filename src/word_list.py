@@ -1,7 +1,12 @@
+import random
+
+
 class WordList:
     def __init__(self):
         with open('../target_wordlist.txt', 'r') as f:
-            self.solution = 'TRABEN'
+            words = f.readlines()
+            self.solution = random.choice(words).strip().upper()
+
         with open('../wordlist.txt', 'r') as w:
             self.dictionary = set(word.strip().upper() for word in w)
 

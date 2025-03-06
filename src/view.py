@@ -49,11 +49,12 @@ class View:
         entry = self.entries[self.cursor_pos[0]][self.cursor_pos[1]]
         if event.keysym == "BackSpace":
             direction = -1
-            entry.delete(0, tk.END)
+            entry.delete(0, "end")
+            self.entries[self.cursor_pos[0]-1][self.cursor_pos[1]].delete(0, tk.END)
         elif event.char.isalpha():
             direction = 1
             entry.delete(0, tk.END)
-            entry.insert(0, event.char.capitalize())
+            entry.insert(0, event.char.upper())
         elif event.keysym == "Return":
             if self.cursor_pos[0] == 5:
                 self.next_row()
@@ -77,15 +78,39 @@ class View:
 
     def next_row(self):
         trial_word = ''
-        for entry in self.entries[self.cursor_pos[1]]:
-            trial_word += entry.get()
-        if trial_word in self.wordlist.get_dictionary():
-            print('öalksdfjölgalg')
+        for i in range(6):
+            trial_word += self.entries[i][self.cursor_pos[1]].get()
+        if trial_word not in self.wordlist.get_dictionary():
             return
         else:
-            self.entries[0][self.cursor_pos[0]].configure(bg='#fe8019')
-            for i in range(5):
+            win_condition = 0
+            for i in range(6):
                 if trial_word[i] in self.wordlist.get_solution():
-                    self.entries[self.cursor_pos[1]][i].configure(bg='#fe8019')
-                if trial_word[i] == self.wordlist.get_solution()[i]:
-                    self.entries[self.cursor_pos[1]][i].configure(bg='#98971a')
+                    self.entries[i][self.cursor_pos[1]].configure(bg='#fe8019')
+                    if trial_word[i] == self.wordlist.get_solution()[i]:
+                        win_condition += 1
+                        self.entries[i][self.cursor_pos[1]].configure(bg='#98971a')
+
+        entry = self.entries[self.cursor_pos[0]][self.cursor_pos[1]]
+        entry.bind("<KeyPress>", lambda e: "break")  # Blocks keyboard input
+        entry.bind("<Button-1>", lambda e: "break")  # Blocks Mouse clicks
+        if self.cursor_pos[1]+1 < 6:
+            self.cursor_pos[1] += 1
+            self.cursor_pos[0] = 0
+            entry = self.entries[self.cursor_pos[0]][self.cursor_pos[1]]
+            entry.focus_set()
+            entry.bind("<KeyPress>", self.focus_next)  # Allow keyboard input for this entry
+        else:
+            for widget in self.grid_frame.winfo_children():
+                widget.destroy()  # Remove all child widgets
+            label = tk.Label(self.grid_frame, bg="#282828", text="VERLOREN!", font=("Terminal", 50), fg='#98971a')
+            label.place(relx=0.5, rely=0.2, anchor="center")
+            label_loes = tk.Label(self.grid_frame, bg="#282828", text=f"Lösung:\n{self.wordlist.get_solution()}",
+                                  font=("Terminal", 40), fg='#ebdbb2')
+            label_loes.place(relx=0.5, rely=0.5, anchor="center")
+
+        if win_condition == 6:
+            for widget in self.grid_frame.winfo_children():
+                widget.destroy()  # Remove all child widgets
+            label = tk.Label(self.grid_frame, bg="#282828", text="GEWONNEN!", font=("Terminal", 50), fg='#98971a')
+            label.place(relx=0.5, rely=0.4, anchor="center")
